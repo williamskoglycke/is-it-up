@@ -1,0 +1,10 @@
+spring:
+  r2dbc:
+    url: r2dbc:h2:mem:///isitup-db?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: password
+
+is-it-up:
+  ping-timeout: 3000
+  refresh-interval: 5000
+  controller-event-interval: 1000

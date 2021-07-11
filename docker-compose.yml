@@ -1,0 +1,46 @@
+version: "3.9"
+services:
+  frontend:
+    build: ./frontend
+    command: ["npm", "start"]
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+  backend:
+    build: ./backend
+    restart: always
+    environment:
+      SPRING_PROFILES_ACTIVE: "prod"
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    depends_on:
+      - "db"
+  db:
+    image: mysql:8.0.25
+    restart: always
+    command:
+      [
+        "mysqld",
+        "--ssl=0",
+        "--default-authentication-plugin=mysql_native_password",
+      ]
+    environment:
+      MYSQL_DATABASE: "isitup-db"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "password"
+      MYSQL_ROOT_PASSWORD: "password"
+      TZ: "Europe/Stockholm"
+    ports:
+      - "3306:3306"
+      - "33060:33060"
+    volumes:
+      - isitup-db:/var/lib/mysql
+    healthcheck:
+      test: mysql --user=$$MYSQL_USER --password=$$MYSQL_PASSWORD -e 'SHOW DATABASES;'
+      timeout: 20s
+      retries: 5
+volumes:
+  isitup-db:

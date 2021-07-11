@@ -1,0 +1,10 @@
+spring:
+  r2dbc:
+    url: r2dbc:pool:mysql://localhost:3306/isitup-db
+    username: user
+    password: password
+
+is-it-up:
+  ping-timeout: 3000
+  refresh-interval: 5000
+  controller-event-interval: 1000

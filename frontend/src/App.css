@@ -1,0 +1,21 @@
+.App {
+  text-align: center;
+  max-width: 100vh;
+  margin: auto;
+  margin-top: 2rem;
+}
+
+.App-header {
+  background-color: white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}

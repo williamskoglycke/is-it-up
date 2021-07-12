@@ -24,6 +24,7 @@
 		<r2dbc-h2.version>0.8.4.RELEASE</r2dbc-h2.version>
 		<mockserver-netty.version>5.11.2</mockserver-netty.version>
 		<awaitility.version>4.1.0</awaitility.version>
+		<springdoc.version>1.5.9</springdoc.version>
 	</properties>
 
 	<dependencies>
@@ -54,6 +55,12 @@
 			<artifactId>caffeine</artifactId>
 			<version>${caffeine.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-webflux-ui</artifactId>
+			<version>${springdoc.version}</version>
+		</dependency>
+
 
 		<!-- TEST -->
 		<dependency>

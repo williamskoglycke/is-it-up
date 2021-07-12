@@ -25,9 +25,4 @@ public class ControllerTestConfiguration {
         return new ServiceMapper(2000, 5000);
     }
 
-    @Bean
-    public Long eventInterval() {
-        return 1000L;
-    }
-
 }

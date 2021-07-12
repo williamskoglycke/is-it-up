@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import se.skoglycke.isitup.domain.IsItUpService;
 import se.skoglycke.isitup.domain.service.AddServiceRequest;
 import se.skoglycke.isitup.domain.service.Service;
+import se.skoglycke.isitup.domain.service.Status;
 import se.skoglycke.isitup.infrastructure.RestClient;
 import se.skoglycke.isitup.infrastructure.ServiceRepository;
 
@@ -53,7 +54,7 @@ class UpdateServicesJobTest {
     void setUp() {
         serviceRepository.deleteAll().block();
         serviceContext.clear();
-        updateServicesJob = new UpdateServicesJob(isItUpService, serviceContext, restClient, 1000L);
+        updateServicesJob = new UpdateServicesJob(isItUpService, serviceContext, restClient, 1000L, true);
     }
 
     @AfterAll
@@ -78,7 +79,7 @@ class UpdateServicesJobTest {
                 );
 
         Service savedService = isItUpService
-                .addService(new AddServiceRequest("Aftonbladet", "https://localhost:" + PORT + "/test"))
+                .addService(new AddServiceRequest("Aftonbladet", "http://localhost:" + PORT + "/test"))
                 .block();
 
         assertThat(savedService).isNotNull();
@@ -91,5 +92,48 @@ class UpdateServicesJobTest {
                 .with()
                 .pollInterval(Duration.ofMillis(100))
                 .until(() -> serviceContext.get(savedService.getId()) != null);
+
+        Service service = serviceContext.get(savedService.getId());
+        assertThat(service).isNotNull();
+        assertThat(service.getStatus()).isPresent();
+        assertThat(service.getStatus().get()).isEqualTo(Status.OK);
     }
+
+    @Test
+    void fillContext_3xxResponse_shouldReturnStatusOK() {
+
+        assertThat(serviceContext).isEmpty();
+
+        new MockServerClient("127.0.0.1", PORT)
+                .when(
+                        request()
+                                .withMethod("GET")
+                                .withPath("/test"))
+                .respond(
+                        response()
+                                .withStatusCode(301)
+                                .withBody("[]")
+                );
+
+        Service savedService = isItUpService
+                .addService(new AddServiceRequest("Aftonbladet", "http://localhost:" + PORT + "/test"))
+                .block();
+
+        assertThat(savedService).isNotNull();
+
+        updateServicesJob.fillContextAfterStartUp();
+
+        await()
+                .atLeast(Duration.ofMillis(100))
+                .atMost(Duration.ofSeconds(5))
+                .with()
+                .pollInterval(Duration.ofMillis(100))
+                .until(() -> serviceContext.get(savedService.getId()) != null);
+
+        Service service = serviceContext.get(savedService.getId());
+        assertThat(service).isNotNull();
+        assertThat(service.getStatus()).isPresent();
+        assertThat(service.getStatus().get()).isEqualTo(Status.OK);
+    }
+
 }

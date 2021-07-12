@@ -8,3 +8,5 @@ is-it-up:
   ping-timeout: 3000
   refresh-interval: 5000
   controller-event-interval: 1000
+  allow-3xx-responses-as-ok: true
+  cache-expire-after-write-in-minutes: 5

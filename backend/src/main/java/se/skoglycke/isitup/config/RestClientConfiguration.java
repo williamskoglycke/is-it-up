@@ -13,7 +13,7 @@ import java.time.Duration;
 public class RestClientConfiguration {
 
     @Bean
-    public WebClient webClient(@Value("${is-it-up.ping-timeout}") Long timeoutInMillis) {
+    public WebClient webClient(@Value("${is-it-up.ping-timeout:3000}") Long timeoutInMillis) {
         HttpClient httpClient = HttpClient.create().responseTimeout(Duration.ofMillis(timeoutInMillis));
         return WebClient.builder()
                 .clientConnector(new ReactorClientHttpConnector(httpClient))

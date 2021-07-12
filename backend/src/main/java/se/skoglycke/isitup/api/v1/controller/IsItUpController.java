@@ -32,7 +32,7 @@ public class IsItUpController {
     public IsItUpController(IsItUpService isItUpService,
                             ServiceMapper serviceMapper,
                             Cache<UUID, ServicesResponse> servicesResponseCache,
-                            @Value("${is-it-up.controller-event-interval}") Long eventInterval) {
+                            @Value("${is-it-up.controller-event-interval:1000}") Long eventInterval) {
         this.isItUpService = isItUpService;
         this.serviceMapper = serviceMapper;
         this.servicesResponseCache = servicesResponseCache;

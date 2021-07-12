@@ -13,6 +13,7 @@ function App() {
   useEffect(() => {
     const sse = new EventSource("http://localhost:8080/api/v1/status");
     sse.onmessage = (e) => {
+      console.log(e);
       setServices(JSON.parse(e.data));
       setLoading(false);
       setSaving(false);

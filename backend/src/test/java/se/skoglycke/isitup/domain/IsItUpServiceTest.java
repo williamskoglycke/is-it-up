@@ -37,16 +37,13 @@ class IsItUpServiceTest {
         String name = "Aftonbladet";
         String url = "https://aftonbladet.se";
 
-        StepVerifier.create(isItUpService.addService(new AddServiceRequest(name, url)))
-                .expectNext(new Service(1L, name, url, null, null, Status.FAIL))
-                .expectComplete()
-                .verify();
+        isItUpService.addService(new AddServiceRequest(name, url)).block();
 
         List<ServiceEntity> serviceEntities = serviceRepository.findAll().collectList().block();
         assertThat(serviceEntities).hasSize(1);
 
         ServiceEntity serviceEntity = serviceEntities.get(0);
-        assertThat(serviceEntity.getId()).isEqualTo(1L);
+        assertThat(serviceEntity.getId()).isNotNull();
         assertThat(serviceEntity.getName()).isEqualTo(name);
         assertThat(serviceEntity.getUrl()).isEqualTo(url);
         assertThat(serviceEntity.getCreatedAt()).isNotNull();
